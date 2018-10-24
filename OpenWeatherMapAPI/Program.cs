@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Threading;
+using System.Net;
+using Newtonsoft.Json.Linq;
 
 namespace OpenWeatherMapAPI
 {
@@ -6,7 +9,20 @@ namespace OpenWeatherMapAPI
     {
         static void Main(string[] args)
         {
-            
+            Console.WriteLine("Welcome to OpenWeatherMap");
+            Console.WriteLine("Please enter the zip code of the area you want to know the temperature in.\nE.g., 12345");
+
+            while (true)
+            {
+                Console.WriteLine("Enter zip");
+                WebClient webClient = new WebClient();
+                string zip = Console.ReadLine();
+                string response = webClient.DownloadString("http://api.openweathermap.org/data/2.5/weather?zip=" + zip + "AccessID");
+                JObject jo = JObject.Parse(response);
+                JToken degreesKelvin = jo.GetValue("main")["temp"];
+
+                Console.WriteLine(degreesKelvin);
+            }
         }
     }
 }
