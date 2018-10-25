@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.IO;
@@ -21,11 +20,13 @@ namespace OpenWeatherMapAPI
                 Console.WriteLine("Enter zip");
                 WebClient webClient = new WebClient();
                 string zip = Console.ReadLine();
-                string response = webClient.DownloadString("http://api.openweathermap.org/data/2.5/weather?zip=" + zip + AccessID);
+                string response = webClient.DownloadString($"http://api.openweathermap.org/data/2.5/weather?zip={zip}&APPID={AccessID}");
                 JObject jo = JObject.Parse(response);
-                JToken degreesKelvin = jo.GetValue("main")["temp"];
+                double degreesKelvin = (double)jo.GetValue("main")["temp"];
 
-                Console.WriteLine(degreesKelvin);
+                double degreesFahrenheit = (((degreesKelvin - 273.15) * (9.00/5.00)) + 32.00);
+
+                Console.WriteLine($"{degreesFahrenheit}°F");
             }
         }
     }
